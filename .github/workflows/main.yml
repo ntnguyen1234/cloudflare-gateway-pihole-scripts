@@ -1,4 +1,4 @@
-name: Update Filter Lists 3
+name: Update Filter Lists
 
 on:
   schedule:
