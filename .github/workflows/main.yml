@@ -17,16 +17,11 @@ env:
 
 jobs:
   cgps:
-    permissions:
-      # Required for gautamkrishnar/keepalive-workflow@v2 to work
-      actions: write
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          repository: "mrrfv/cloudflare-gateway-pihole-scripts"
-          ref: "v1"
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -62,15 +57,16 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_LIST_ITEM_LIMIT: ${{ secrets.CLOUDFLARE_LIST_ITEM_LIMIT }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          FAST_MODE: ${{ vars.FAST_MODE }}
 
-      - name: Send ping request
-        if: env.PING_URL != ''
+      - name: Generate
         run: |
-          curl "${{ env.PING_URL }}"
-        env:
-          PING_URL: ${{ secrets.PING_URL }}
-
-      - name: Keep workflow alive
-        uses: gautamkrishnar/keepalive-workflow@14b7c72e9af14bddbbc1022a6f0bd20b1eac2619 # v2
+          echo "Temp" >> ./temp.txt
+      - name: Keep
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: keep
+          skip_checkout: true
+          skip_dirty_check: true
+          push_options: '--force'
+          file_pattern: ./temp.txt
+          commit_message: Bump
